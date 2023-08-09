@@ -80,6 +80,24 @@ app.put('/products/:id',async(req,res)=>{
     }
 });
 
+//delete route to delete data or product and using delete method
+app.delete('/products/:id',async(req,res)=>{
+    try
+    {
+        const {id}=req.params;
+        const product=await Product.findByIdAndDelete(id);
+        if(!product)
+        {
+            res.status(404).json({message:`Product not found product ${id}`});
+        }
+        res.status(200).json(product);
+    }
+    catch(error)
+    {
+        console.log(error.message);
+        res.status(500).json({message:error.message});
+    }
+});
 mongoose.set('strictQuery', false);
 mongoose.connect('mongodb+srv://Rajat35:Rajat35@api-node.aqccrto.mongodb.net/?retryWrites=true&w=majority')
 .then(()=>{
