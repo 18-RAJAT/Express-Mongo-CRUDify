@@ -10,6 +10,9 @@ app.get('/',(req,res)=>{
     res.send('Hello World');
 });
 
+//async function to connect to database
+//await keyword is used to wait for the promise to resolve and then proceed further
+
 //get data from database
 app.get('/products',async(req,res)=>{
     try
@@ -46,6 +49,29 @@ app.post('/products',async(req,res)=>{
     {
         const product=await Product.create(req.body);
         res.status(200).json(product);
+    }
+    catch(error)
+    {
+        console.log(error.message);
+        res.status(500).json({message:error.message});
+    }
+});
+
+//new route to update data or product and using put method
+app.put('/products/:id',async(req,res)=>{
+    try
+    {
+        //id is destructured from req.params
+        //destructuring is used to get the id from req.params
+        const {id}=req.params;
+        const product=await Product.findByIdAndUpdate(id,req.body);//req.data send by client is stored in req.body
+        if(!product)
+        {
+            res.status(404).json({message:`Product not found product ${id}`});
+        }
+        // const UpdateProduct=await Product.findById(id);
+        res.status(200).json(product);
+        // res.status(200).json(UpdateProduct);
     }
     catch(error)
     {
